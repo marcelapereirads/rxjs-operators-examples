@@ -1,0 +1,13 @@
+.example {
+    margin: 2rem;
+    padding: 1.5rem;
+    border: none;
+    border-radius: 1rem;
+    font-weight: bolder;
+    color: white;
+    background-color: navy;
+
+    &:hover{
+        text-decoration: underline;
+    }
+}
