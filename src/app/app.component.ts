@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { concat, forkJoin, from, interval, of } from 'rxjs';
-import { concatMap, exhaustMap, map, mergeMap, switchMap, take, tap } from 'rxjs/operators';
+import { concatMap, count, every, exhaustMap, filter, map, mergeMap, switchMap, take, tap, toArray, mergeAll } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -11,23 +11,27 @@ export class AppComponent {
 
   parentObservable$ = interval(1000).pipe(map(i => `Parent ${i}`));
   childObservable$ = (parent) => interval(2000).pipe(map(i => `Child of ${parent} => ${(i) * 10}`));
+a
+  initExample(functionName: string) {
+    console.log(`====================== ${functionName.toUpperCase()} ======================`);
+  }
 
   ofExample() {
-    console.log('====================== OF ======================');
+    this.initExample('of');
 
     // The 'of' function emits all elements once
     of(['blue', 'green', 'red']).subscribe(item => console.log(item));
   }
 
   fromExample() {
-    console.log('====================== FROM ======================');
+    this.initExample('from');
 
     // The 'from' function emits the elements one by one
     from(['blue', 'green', 'red']).subscribe(item => console.log(item));
   }
 
   mapExample() {
-    console.log('====================== MAP ======================');
+     this.initExample('map');
 
     const numbers = from([1, 2, 3]).pipe(
       // The 'map' transforms the emitted value
@@ -36,8 +40,49 @@ export class AppComponent {
     numbers.subscribe(value => console.log(value));
   }
 
+  filterExample() {
+    this.initExample('filter');
+
+    const numbers = from([1, 2, 3]).pipe(
+      // The 'filter' allows to use a condition to filter the values
+      filter(number => number % 2 === 0)
+    );
+
+    numbers.subscribe(value => console.log(value));
+  }
+
+  everyExample() {
+    this.initExample('every');
+
+    const numbers = from([1, 2, 3]).pipe(
+      // The 'every' checks a condition for all items of the source
+      every(number => number % 2 === 0),
+    );
+
+    numbers.subscribe(value => console.log(value));
+  }
+
+  countExample() {
+    this.initExample('count');
+
+    from([1, 2, 3]).pipe(
+      // The 'count' emits the number of emissions when the source completes
+      count()
+    ).subscribe(value => console.log(value));
+  }
+
+  toArrayExample() {    
+    this.initExample('to array');
+
+    this.parentObservable$.pipe(
+      take(4),
+      // The 'toArray' emits an array with all values when the source completes
+      toArray()
+    ).subscribe(value => console.log(value));
+  }
+
   concatExample() {
-    console.log('====================== CONCAT ======================');
+    this.initExample('concat');
 
     // The 'concat' creates an observable that emits values from all sources
     const concatedValues = concat(of(1), of(2));
@@ -46,7 +91,7 @@ export class AppComponent {
   }
 
   forkJoinExample() {
-    console.log('====================== FORK JOIN ======================');
+    this.initExample('fork join');
     
     // The 'forkJoin' emits an array or object with all the passed values
     forkJoin({
@@ -56,7 +101,7 @@ export class AppComponent {
   }
 
   concatMapExample() {
-    console.log('====================== CONCAT MAP ======================');
+    this.initExample('concat map');
 
     this.parentObservable$.pipe(
       tap(console.log),
@@ -70,7 +115,7 @@ export class AppComponent {
   }
 
   mergeMapExample() {
-    console.log('====================== MERGE MAP ======================');
+    this.initExample('merge map');
 
     this.parentObservable$.pipe(
       tap(console.log),
@@ -84,7 +129,7 @@ export class AppComponent {
   }
 
   switchMapExample() {
-    console.log('====================== SWITCH MAP ======================');
+    this.initExample('switch map');
 
     this.parentObservable$.pipe(
       tap(console.log),
@@ -98,8 +143,8 @@ export class AppComponent {
   }
 
   exhaustMapExample() {
-    console.log('====================== EXHAUST MAP ======================');
-    
+    this.initExample('exhaust map');
+
     this.parentObservable$.pipe(
       tap(console.log),
       take(5),
